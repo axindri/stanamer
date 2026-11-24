@@ -20,10 +20,6 @@ services:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       OPENAI_MODEL: ${OPENAI_MODEL}
       OPENAI_VERIFY_SSL: ${OPENAI_VERIFY_SSL:-true}
-      # Inside container; host file: ./certs/rootca.crt
-      OPENAI_CA_BUNDLE: ${OPENAI_CA_BUNDLE:-/certs/rootca.crt}
-    volumes:
-      - ./certs:/certs:ro
     expose:
       - "8000"
     healthcheck:
