@@ -17,6 +17,9 @@ class Settings(BaseSettings):
     openai_base_url: str = "https://api.openai.com/v1"
     openai_api_key: str = ""
     openai_model: str = "qwen"
+    # Corporate MITM / custom CA: set OPENAI_VERIFY_SSL=false or OPENAI_CA_BUNDLE=/path/ca.pem
+    openai_verify_ssl: bool = True
+    openai_ca_bundle: str = ""
 
     @property
     def cors_origin_list(self) -> list[str]:

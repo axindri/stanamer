@@ -8,6 +8,7 @@ from openai import APIError, APIStatusError, AsyncOpenAI, APITimeoutError, APICo
 
 from app.config import Settings
 from app.schemas import NameSuggestion, NamingRequest, NamingResponse
+from app.services.http_ssl import build_async_http_client
 from app.services.prompts import SYSTEM_PROMPT, build_user_prompt
 from app.services.style import apply_naming_style
 
@@ -95,15 +96,19 @@ def _parse_suggestions(data: dict, count: int) -> list[NameSuggestion]:
 class NamingLLMService:
     def __init__(self, settings: Settings) -> None:
         self._settings = settings
+        self._http_client = build_async_http_client(settings, timeout=120.0)
         self._client = AsyncOpenAI(
             base_url=settings.openai_base_url,
             api_key=settings.openai_api_key or "missing-key",
+            http_client=self._http_client,
         )
 
     def _request_context(self, request: NamingRequest) -> dict[str, Any]:
         return {
             "base_url": self._settings.openai_base_url,
             "model": self._settings.openai_model,
+            "verify_ssl": self._settings.openai_verify_ssl,
+            "ca_bundle": bool(self._settings.openai_ca_bundle.strip()),
             "entity_type": request.entity_type.value,
             "style": request.style.value,
             "count": request.count,

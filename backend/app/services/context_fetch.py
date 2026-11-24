@@ -9,6 +9,9 @@ from urllib.parse import urlparse
 import httpx
 from fastapi import HTTPException
 
+from app.config import get_settings
+from app.services.http_ssl import build_async_http_client
+
 logger = logging.getLogger(__name__)
 
 MAX_CONTEXT_BYTES = 8000
@@ -77,8 +80,8 @@ async def fetch_raw_context(url: str) -> tuple[str, str]:
 
     logger.info("Fetching context URL | source=%s", source)
     try:
-        async with httpx.AsyncClient(
-            follow_redirects=True,
+        async with build_async_http_client(
+            get_settings(),
             timeout=FETCH_TIMEOUT_SECONDS,
         ) as client:
             response = await client.get(source)

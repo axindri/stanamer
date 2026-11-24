@@ -55,3 +55,5 @@ UI: http://127.0.0.1:5173 — Vite проксирует `/api` на `:8000`.
 | `OPENAI_BASE_URL` | Base URL OpenAI-compatible шлюза |
 | `OPENAI_API_KEY` | Токен |
 | `OPENAI_MODEL` | Имя модели |
+| `OPENAI_VERIFY_SSL` | Проверка TLS (`true`/`false`). На корп-ноуте с MITM часто `false` |
+| `OPENAI_CA_BUNDLE` | Путь к корпоративному CA (предпочтительнее, чем отключать verify) |
