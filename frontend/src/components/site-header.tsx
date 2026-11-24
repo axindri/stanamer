@@ -12,13 +12,17 @@ export function SiteHeader() {
       <div className="mx-auto flex h-14 w-full max-w-2xl items-center justify-between gap-4 px-6">
         <NavLink
           to="/"
-          className="text-sm font-medium tracking-tight"
+          className="flex items-center gap-2 text-sm font-medium tracking-tight"
           end
         >
+          <img
+            src="/icon.jpg"
+            alt=""
+            className="size-6 rounded-md object-cover"
+          />
           STANAMER
         </NavLink>
         <div className="ml-auto flex items-center gap-4">
-          <ThemeToggle />
           <nav className="flex items-center">
             <NavLink
               to="/naming"
@@ -29,6 +33,7 @@ export function SiteHeader() {
               Нейминг
             </NavLink>
           </nav>
+          <ThemeToggle />
         </div>
       </div>
     </header>
