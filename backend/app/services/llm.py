@@ -108,7 +108,16 @@ class NamingLLMService:
             "base_url": self._settings.openai_base_url,
             "model": self._settings.openai_model,
             "verify_ssl": self._settings.openai_verify_ssl,
-            "ca_bundle": bool(self._settings.openai_ca_bundle.strip()),
+            "ca_bundle": self._settings.openai_ca_bundle.strip() or None,
+            "tls_mode": (
+                "insecure"
+                if not self._settings.openai_verify_ssl
+                else (
+                    "system+ca"
+                    if self._settings.openai_ca_bundle.strip()
+                    else "system"
+                )
+            ),
             "entity_type": request.entity_type.value,
             "style": request.style.value,
             "count": request.count,

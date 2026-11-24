@@ -55,5 +55,7 @@ UI: http://127.0.0.1:5173 — Vite проксирует `/api` на `:8000`.
 | `OPENAI_BASE_URL` | Base URL OpenAI-compatible шлюза |
 | `OPENAI_API_KEY` | Токен |
 | `OPENAI_MODEL` | Имя модели |
-| `OPENAI_VERIFY_SSL` | Проверка TLS (`true`/`false`). На корп-ноуте с MITM часто `false` |
-| `OPENAI_CA_BUNDLE` | Путь к корпоративному CA (предпочтительнее, чем отключать verify) |
+| `OPENAI_VERIFY_SSL` | Проверка TLS (`true`/`false`) |
+| `OPENAI_CA_BUNDLE` | Корп CA (Docker: `/certs/rootca.crt`). По умолчанию берётся **системное** хранилище как в VS Code (`truststore`) |
+
+> VS Code-расширение видит корп-сертификаты из OS, а обычный Python — нет. Stanamer теперь тоже использует OS trust store. В Docker положите CA в `./certs/rootca.crt`.
