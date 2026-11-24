@@ -1,0 +1,36 @@
+# Naming context (raw)
+# Edit and upload this file in the Context field (mode: Загрузить файл).
+
+layers:
+  stg = staging, raw-ish copy from source
+  ods = operational data store
+  dds = dimensional / analytics layer
+  dm  = data mart
+
+table_prefixes:
+  dim_  = dimension
+  fact_ = fact
+  stg_  = staging
+  ods_  = ODS
+  bridge_ = many-to-many link
+
+conventions:
+  - English identifiers only
+  - Prefer snake_case for tables, columns, DAGs, topics
+  - Prefer full words over cryptic abbreviations
+  - Domain terms: customer, order, position, product, payment
+  - Soft-delete flag: is_deleted
+  - Business date: business_dt
+  - Load timestamp: loaded_at
+
+dag_conventions:
+  - Do NOT use dag_, namespace_, pipeline_, job_ prefixes
+  - Name only the business entity and action
+  - Verbs: load, reload, sync, rebuild, refresh
+  - Pattern: <entity>_<action> or <action>_<entity>
+
+examples:
+  dim_customer
+  fact_order_item
+  stg_crm_customer
+  order_position_history_reload
