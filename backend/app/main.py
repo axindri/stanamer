@@ -2,12 +2,14 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
+from app.logging_config import configure_logging
 from app.routers import context, health, meta, naming
 from app.services.llm import NamingLLMService
 
 
 def create_app() -> FastAPI:
     settings = get_settings()
+    configure_logging(settings.app_env)
     app = FastAPI(title="Stanamer", version="0.1.0")
 
     app.add_middleware(

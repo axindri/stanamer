@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import ipaddress
+import logging
 import re
 import socket
 from urllib.parse import urlparse
 
 import httpx
 from fastapi import HTTPException
+
+logger = logging.getLogger(__name__)
 
 MAX_CONTEXT_BYTES = 8000
 FETCH_TIMEOUT_SECONDS = 15.0
@@ -72,6 +75,7 @@ async def fetch_raw_context(url: str) -> tuple[str, str]:
     source = normalize_git_raw_url(url)
     _assert_safe_url(source)
 
+    logger.info("Fetching context URL | source=%s", source)
     try:
         async with httpx.AsyncClient(
             follow_redirects=True,
@@ -79,11 +83,23 @@ async def fetch_raw_context(url: str) -> tuple[str, str]:
         ) as client:
             response = await client.get(source)
     except httpx.HTTPError as exc:
+        logger.error(
+            "Context URL fetch failed | source=%s | error=%s",
+            source,
+            exc,
+            exc_info=True,
+        )
         raise HTTPException(
-            status_code=502, detail="Не удалось загрузить файл по ссылке"
+            status_code=502, detail=f"Не удалось загрузить файл по ссылке: {exc}"
         ) from exc
 
     if response.status_code >= 400:
+        logger.error(
+            "Context URL HTTP error | source=%s | status=%s | body=%r",
+            source,
+            response.status_code,
+            response.text[:500],
+        )
         raise HTTPException(
             status_code=502,
             detail=f"Источник ответил HTTP {response.status_code}",
