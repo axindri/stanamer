@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ChevronsUpDownIcon, SettingsIcon } from "lucide-react"
+import { ChevronDownIcon, SettingsIcon } from "lucide-react"
 
 import { ContextField, type ContextMode } from "@/components/context-field"
 import { NameLengthField } from "@/components/name-length-field"
@@ -66,21 +66,16 @@ export function OptionalNamingParams({
     <Collapsible
       open={open}
       onOpenChange={setOpen}
-      className="flex flex-col gap-4"
+      className="rounded-md"
     >
-      <div className="flex items-center justify-between gap-4">
-        <h4 className="flex items-center gap-2 text-sm font-semibold">
-          <SettingsIcon className="size-4 text-muted-foreground" />
+      <CollapsibleTrigger asChild>
+        <Button type="button" variant="ghost" className="group w-full">
+          <SettingsIcon data-icon="inline-start" />
           Дополнительные параметры
-        </h4>
-        <CollapsibleTrigger asChild>
-          <Button type="button" variant="ghost" size="icon" className="size-8">
-            <ChevronsUpDownIcon />
-            <span className="sr-only">Показать дополнительные параметры</span>
-          </Button>
-        </CollapsibleTrigger>
-      </div>
-      <CollapsibleContent className="flex flex-col gap-4">
+          <ChevronDownIcon className="ml-auto transition-transform group-data-[state=open]:rotate-180" />
+        </Button>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="flex flex-col gap-4 px-2.5 pt-3 pb-2.5">
         <SuggestionCountField
           value={suggestionCount}
           onValueChange={onSuggestionCountChange}

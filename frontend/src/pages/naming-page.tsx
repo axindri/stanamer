@@ -291,8 +291,13 @@ export function NamingPage() {
               <CardFooter className="border-t-0 bg-transparent">
                 <p className="text-xs text-muted-foreground">
                   Используются технологии{" "}
-                  <span className="font-mono">{llmConfig.base_url}</span> и
-                  модель <span className="font-mono">{llmConfig.model}</span>
+                  <span className="font-mono text-primary">
+                    {llmConfig.base_url}
+                  </span>{" "}
+                  и модель{" "}
+                  <span className="font-mono text-primary">
+                    {llmConfig.model}
+                  </span>
                 </p>
               </CardFooter>
             ) : null}
