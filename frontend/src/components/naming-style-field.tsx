@@ -7,10 +7,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import type { NamingStyleMetaItem } from "@/lib/api"
 import { cn } from "@/lib/utils"
 import {
   DEFAULT_NAMING_STYLE,
-  NAMING_STYLE_OPTIONS,
   type NamingStyle,
   isNamingStyle,
 } from "@/lib/style"
@@ -19,6 +19,7 @@ type NamingStyleFieldProps = {
   id: string
   value?: NamingStyle
   onValueChange: (value: NamingStyle) => void
+  options: NamingStyleMetaItem[]
   required?: boolean
   showLabel?: boolean
   className?: string
@@ -29,6 +30,7 @@ export function NamingStyleField({
   id,
   value = DEFAULT_NAMING_STYLE,
   onValueChange,
+  options,
   required = false,
   showLabel = true,
   className,
@@ -48,15 +50,11 @@ export function NamingStyleField({
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          {NAMING_STYLE_OPTIONS.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-              <span className="text-muted-foreground">
-                {" "}
-                — {option.example}
-              </span>
-            </SelectItem>
-          ))}
+            {options.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
         </SelectGroup>
       </SelectContent>
     </Select>

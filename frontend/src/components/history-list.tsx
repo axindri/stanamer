@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/empty"
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
+import type { NamingStyleMetaItem } from "@/lib/api"
 import { EntityTypeIcon } from "@/lib/entity-meta"
 import type { NamingHistoryEntry } from "@/lib/history"
 import type { NamingStyle } from "@/lib/style"
@@ -33,6 +34,7 @@ type HistoryListProps = {
   onClear: () => void
   onStyleChange: (entryId: string, style: NamingStyle) => void
   entityLabels: Record<string, string>
+  namingStyles: NamingStyleMetaItem[]
 }
 
 function formatTime(iso: string): string {
@@ -51,11 +53,13 @@ function formatTime(iso: string): string {
 function HistoryEntryCard({
   entry,
   entityLabels,
+  namingStyles,
   onStyleChange,
   defaultOpen,
 }: {
   entry: NamingHistoryEntry
   entityLabels: Record<string, string>
+  namingStyles: NamingStyleMetaItem[]
   onStyleChange: (entryId: string, style: NamingStyle) => void
   defaultOpen: boolean
 }) {
@@ -107,6 +111,7 @@ function HistoryEntryCard({
               id={`history-style-${entry.id}`}
               value={entry.style}
               onValueChange={(style) => onStyleChange(entry.id, style)}
+              options={namingStyles}
             />
             <SuggestionList
               suggestions={entry.suggestions}
@@ -124,6 +129,7 @@ export function HistoryList({
   onClear,
   onStyleChange,
   entityLabels,
+  namingStyles,
 }: HistoryListProps) {
   if (entries.length === 0) {
     return (
@@ -162,6 +168,7 @@ export function HistoryList({
             <HistoryEntryCard
               entry={entry}
               entityLabels={entityLabels}
+              namingStyles={namingStyles}
               onStyleChange={onStyleChange}
               defaultOpen={index === 0}
             />

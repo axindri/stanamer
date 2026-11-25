@@ -109,7 +109,7 @@ class NamingLLMService:
             "model": self._settings.openai_model,
             "verify_ssl": self._settings.openai_verify_ssl,
             "entity_type": request.entity_type.value,
-            "style": request.style.value,
+            "style": request.style.value if request.style else None,
             "count": request.count,
             "max_length": request.max_length,
             "description_len": len(request.description or ""),
@@ -202,9 +202,15 @@ class NamingLLMService:
         )
 
         payload = _extract_json_payload(content)
+        style = request.style
+        if style is None:
+            from app.schemas import ENTITY_DEFAULT_STYLES
+
+            style = ENTITY_DEFAULT_STYLES[request.entity_type]
+
         suggestions = [
             NameSuggestion(
-                name=apply_naming_style(item.name, request.style),
+                name=apply_naming_style(item.name, style),
                 rationale=item.rationale,
             )
             for item in _parse_suggestions(payload, request.count)
@@ -216,5 +222,6 @@ class NamingLLMService:
         )
         return NamingResponse(
             entity_type=request.entity_type,
+            style=style,
             suggestions=suggestions,
         )

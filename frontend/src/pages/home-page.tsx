@@ -25,13 +25,23 @@ export function HomePage() {
           Единые правила именования сущностей — меньше хаоса между слоями,
           командами и системами.
         </p>
-        <div className="pt-2">
+        <div className="flex flex-col items-start gap-4 pt-2">
           <Button asChild size="lg">
             <Link to="/naming">
               Открыть нейминг
               <ArrowRightIcon data-icon="inline-end" />
             </Link>
           </Button>
+          <p className="max-w-lg text-sm text-muted-foreground">
+            Для разработчиков: примеры вызова API генерации — на странице{" "}
+            <Link
+              to="/dev"
+              className="underline underline-offset-4 hover:text-foreground"
+            >
+              Development
+            </Link>
+            .
+          </p>
         </div>
       </div>
     </section>

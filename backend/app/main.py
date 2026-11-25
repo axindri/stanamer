@@ -10,7 +10,13 @@ from app.services.llm import NamingLLMService
 def create_app() -> FastAPI:
     settings = get_settings()
     configure_logging(settings.app_env)
-    app = FastAPI(title="Stanamer", version="0.1.0")
+    app = FastAPI(
+        title="Stanamer",
+        version="0.1.0",
+        docs_url="/swagger",
+        redoc_url=None,
+        openapi_url="/openapi.json",
+    )
 
     app.add_middleware(
         CORSMiddleware,

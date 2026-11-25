@@ -6,35 +6,15 @@ export type NamingStyle =
 
 export const DEFAULT_NAMING_STYLE: NamingStyle = "snake_case"
 
-export const NAMING_STYLE_OPTIONS: {
-  value: NamingStyle
-  label: string
-  example: string
-}[] = [
-  {
-    value: "snake_case",
-    label: "snake_case",
-    example: "dim_customer_orders",
-  },
-  {
-    value: "camelCase",
-    label: "camelCase",
-    example: "dimCustomerOrders",
-  },
-  {
-    value: "PascalCase",
-    label: "PascalCase",
-    example: "DimCustomerOrders",
-  },
-  {
-    value: "kebab-case",
-    label: "kebab-case",
-    example: "dim-customer-orders",
-  },
+const KNOWN_STYLES: NamingStyle[] = [
+  "snake_case",
+  "camelCase",
+  "PascalCase",
+  "kebab-case",
 ]
 
 export function isNamingStyle(value: unknown): value is NamingStyle {
-  return NAMING_STYLE_OPTIONS.some((option) => option.value === value)
+  return typeof value === "string" && KNOWN_STYLES.includes(value as NamingStyle)
 }
 
 const CAMEL_BOUNDARY =

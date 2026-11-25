@@ -26,7 +26,7 @@ export function ThemeToggle() {
       <DropdownMenuTrigger asChild>
         <Button
           type="button"
-          variant="outline"
+          variant="ghost"
           size="icon"
           aria-label="Сменить тему"
         >

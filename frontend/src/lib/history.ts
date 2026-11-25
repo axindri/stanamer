@@ -6,7 +6,7 @@ import {
 } from "@/lib/style"
 
 export const HISTORY_STORAGE_KEY = "stanamer.naming-history"
-export const HISTORY_LIMIT = 3
+export const HISTORY_LIMIT = 10
 
 export type NamingHistoryEntry = {
   id: string

@@ -3,6 +3,19 @@ export type MetaItem = {
   label: string
 }
 
+export type EntityTypeMetaItem = MetaItem & {
+  default_style: string
+}
+
+export type NamingStyleMetaItem = MetaItem & {
+  example: string
+}
+
+export type LlmConfigMeta = {
+  base_url: string
+  model: string
+}
+
 export type NameSuggestion = {
   name: string
   rationale: string
@@ -10,6 +23,7 @@ export type NameSuggestion = {
 
 export type NamingResponse = {
   entity_type: string
+  style: string
   suggestions: NameSuggestion[]
 }
 
@@ -18,9 +32,12 @@ export type NamingRequestPayload = {
   description: string
   context?: string | null
   context_url?: string | null
-  style?: string
+  style?: string | null
   count?: number
   max_length?: number
+  prefer_short?: boolean
+  allow_digits?: boolean
+  name_prefix?: string | null
 }
 
 async function readError(response: Response): Promise<string> {
@@ -44,12 +61,28 @@ async function readError(response: Response): Promise<string> {
   return `HTTP ${response.status}`
 }
 
-export async function fetchEntityTypes(): Promise<MetaItem[]> {
+export async function fetchEntityTypes(): Promise<EntityTypeMetaItem[]> {
   const response = await fetch("/api/v1/meta/entity-types")
   if (!response.ok) {
     throw new Error(await readError(response))
   }
-  return response.json() as Promise<MetaItem[]>
+  return response.json() as Promise<EntityTypeMetaItem[]>
+}
+
+export async function fetchNamingStyles(): Promise<NamingStyleMetaItem[]> {
+  const response = await fetch("/api/v1/meta/naming-styles")
+  if (!response.ok) {
+    throw new Error(await readError(response))
+  }
+  return response.json() as Promise<NamingStyleMetaItem[]>
+}
+
+export async function fetchLlmConfig(): Promise<LlmConfigMeta> {
+  const response = await fetch("/api/v1/meta/llm")
+  if (!response.ok) {
+    throw new Error(await readError(response))
+  }
+  return response.json() as Promise<LlmConfigMeta>
 }
 
 export async function generateNames(
@@ -65,4 +98,3 @@ export async function generateNames(
   }
   return response.json() as Promise<NamingResponse>
 }
-

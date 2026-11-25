@@ -30,13 +30,55 @@ ENTITY_TYPE_LABELS: dict[EntityType, str] = {
     EntityType.FUNCTION: "Функция",
 }
 
+NAMING_STYLE_LABELS: dict[NamingStyle, str] = {
+    NamingStyle.SNAKE_CASE: "snake_case",
+    NamingStyle.CAMEL_CASE: "camelCase",
+    NamingStyle.PASCAL_CASE: "PascalCase",
+    NamingStyle.KEBAB_CASE: "kebab-case",
+}
+
+NAMING_STYLE_EXAMPLES: dict[NamingStyle, str] = {
+    NamingStyle.SNAKE_CASE: "dim_customer_orders",
+    NamingStyle.CAMEL_CASE: "dimCustomerOrders",
+    NamingStyle.PASCAL_CASE: "DimCustomerOrders",
+    NamingStyle.KEBAB_CASE: "dim-customer-orders",
+}
+
+ENTITY_DEFAULT_STYLES: dict[EntityType, NamingStyle] = {
+    EntityType.TABLE: NamingStyle.SNAKE_CASE,
+    EntityType.COLUMN: NamingStyle.SNAKE_CASE,
+    EntityType.DAG: NamingStyle.SNAKE_CASE,
+    EntityType.TOPIC: NamingStyle.KEBAB_CASE,
+    EntityType.METRIC: NamingStyle.SNAKE_CASE,
+    EntityType.SCHEMA: NamingStyle.SNAKE_CASE,
+    EntityType.FUNCTION: NamingStyle.SNAKE_CASE,
+}
+
 
 class MetaItem(BaseModel):
     value: str
     label: str
 
 
+class EntityTypeMetaItem(BaseModel):
+    value: str
+    label: str
+    default_style: str
+
+
+class NamingStyleMetaItem(BaseModel):
+    value: str
+    label: str
+    example: str
+
+
+class LlmConfigMeta(BaseModel):
+    base_url: str
+    model: str
+
+
 DEFAULT_MAX_NAME_LENGTH = 40
+DEFAULT_SUGGESTION_COUNT = 5
 
 
 class NamingRequest(BaseModel):
@@ -48,13 +90,29 @@ class NamingRequest(BaseModel):
         max_length=2000,
         description="HTTPS git raw/blob URL; fetched at request time",
     )
-    style: NamingStyle = NamingStyle.SNAKE_CASE
-    count: int = Field(default=5, ge=1, le=10)
+    style: NamingStyle | None = Field(
+        default=None,
+        description="If omitted, backend picks default style for entity_type",
+    )
+    count: int = Field(default=DEFAULT_SUGGESTION_COUNT, ge=3, le=7)
     max_length: int = Field(
         default=DEFAULT_MAX_NAME_LENGTH,
         ge=8,
         le=80,
         description="Maximum length of each suggested name",
+    )
+    prefer_short: bool = Field(
+        default=False,
+        description="Prefer shorter identifiers within max_length",
+    )
+    allow_digits: bool = Field(
+        default=True,
+        description="Allow digits in suggested names",
+    )
+    name_prefix: str | None = Field(
+        default=None,
+        max_length=40,
+        description="Optional fixed prefix for all suggestions (e.g. stg_)",
     )
 
 
@@ -74,4 +132,5 @@ class NameSuggestion(BaseModel):
 
 class NamingResponse(BaseModel):
     entity_type: EntityType
+    style: NamingStyle
     suggestions: list[NameSuggestion]
