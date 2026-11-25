@@ -4,14 +4,16 @@ import { toast } from "sonner"
 
 import { type ContextMode } from "@/components/context-field"
 import { HistoryList } from "@/components/history-list"
-import { NamingPromptField } from "@/components/naming-prompt-field"
+import {
+  MIN_DESCRIPTION_LENGTH,
+  NamingPromptField,
+} from "@/components/naming-prompt-field"
 import { NamingStyleField } from "@/components/naming-style-field"
 import { OptionalNamingParams } from "@/components/optional-naming-params"
 import { SuggestionList } from "@/components/suggestion-list"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { FieldGroup } from "@/components/ui/field"
-import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   type EntityTypeMetaItem,
@@ -50,7 +52,6 @@ export function NamingPage() {
   const [entityTypes, setEntityTypes] = useState<EntityTypeMetaItem[]>([])
   const [namingStyles, setNamingStyles] = useState<NamingStyleMetaItem[]>([])
   const [llmConfig, setLlmConfig] = useState<LlmConfigMeta | null>(null)
-  const [metaLoading, setMetaLoading] = useState(true)
   const [metaReady, setMetaReady] = useState(false)
 
   const [entityType, setEntityType] = useState("table")
@@ -160,7 +161,6 @@ export function NamingPage() {
     let cancelled = false
 
     async function loadMeta() {
-      setMetaLoading(true)
       setMetaReady(false)
       try {
         const [entities, styles, llm] = await Promise.all([
@@ -188,10 +188,6 @@ export function NamingPage() {
               ? err.message
               : "Не удалось загрузить метаданные"
           )
-        }
-      } finally {
-        if (!cancelled) {
-          setMetaLoading(false)
         }
       }
     }
@@ -252,9 +248,19 @@ export function NamingPage() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (loading) {
+      return
+    }
     const trimmed = description.trim()
-    if (trimmed.length < 3) {
-      toast.warning("Описание должно быть не короче 3 символов")
+    if (trimmed.length < MIN_DESCRIPTION_LENGTH) {
+      toast.warning(
+        `Описание должно быть не короче ${MIN_DESCRIPTION_LENGTH} символов`
+      )
+      return
+    }
+
+    if (!metaReady) {
+      toast.warning("Метаданные ещё загружаются, подождите немного")
       return
     }
 
@@ -332,52 +338,44 @@ export function NamingPage() {
         <TabsContent value="generate" className="flex flex-col gap-8">
           <Card>
             <CardContent>
-              {metaLoading ? (
-                <div className="flex flex-col gap-3">
-                  <Skeleton className="h-8 w-full" />
-                  <Skeleton className="h-8 w-full" />
-                  <Skeleton className="h-24 w-full" />
-                </div>
-              ) : metaReady ? (
-                <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-                  <FieldGroup>
-                    <OptionalNamingParams
-                      suggestionCount={suggestionCount}
-                      onSuggestionCountChange={setSuggestionCount}
-                      maxNameLength={maxNameLength}
-                      onMaxNameLengthChange={setMaxNameLength}
-                      preferShort={preferShort}
-                      onPreferShortChange={setPreferShort}
-                      allowDigits={allowDigits}
-                      onAllowDigitsChange={setAllowDigits}
-                      namePrefix={namePrefix}
-                      onNamePrefixChange={setNamePrefix}
-                      namePostfix={namePostfix}
-                      onNamePostfixChange={setNamePostfix}
-                      contextMode={contextMode}
-                      onContextModeChange={setContextMode}
-                      context={context}
-                      onContextChange={setContext}
-                      contextUrl={contextUrl}
-                      onContextUrlChange={setContextUrl}
-                      modified={optionalParamsModified}
-                      onReset={handleResetOptionalParams}
-                    />
+              <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+                <FieldGroup>
+                  <OptionalNamingParams
+                    suggestionCount={suggestionCount}
+                    onSuggestionCountChange={setSuggestionCount}
+                    maxNameLength={maxNameLength}
+                    onMaxNameLengthChange={setMaxNameLength}
+                    preferShort={preferShort}
+                    onPreferShortChange={setPreferShort}
+                    allowDigits={allowDigits}
+                    onAllowDigitsChange={setAllowDigits}
+                    namePrefix={namePrefix}
+                    onNamePrefixChange={setNamePrefix}
+                    namePostfix={namePostfix}
+                    onNamePostfixChange={setNamePostfix}
+                    contextMode={contextMode}
+                    onContextModeChange={setContextMode}
+                    context={context}
+                    onContextChange={setContext}
+                    contextUrl={contextUrl}
+                    onContextUrlChange={setContextUrl}
+                    modified={optionalParamsModified}
+                    onReset={handleResetOptionalParams}
+                  />
 
-                    <NamingPromptField
-                      description={description}
-                      onDescriptionChange={setDescription}
-                      entityType={entityType}
-                      onEntityTypeChange={handleEntityTypeChange}
-                      entityTypes={entityTypes}
-                      namingStyle={namingStyle}
-                      onNamingStyleChange={setNamingStyle}
-                      namingStyles={namingStyles}
-                      loading={loading}
-                    />
-                  </FieldGroup>
-                </form>
-              ) : null}
+                  <NamingPromptField
+                    description={description}
+                    onDescriptionChange={setDescription}
+                    entityType={entityType}
+                    onEntityTypeChange={handleEntityTypeChange}
+                    entityTypes={entityTypes}
+                    namingStyle={namingStyle}
+                    onNamingStyleChange={setNamingStyle}
+                    namingStyles={namingStyles}
+                    loading={loading}
+                  />
+                </FieldGroup>
+              </form>
             </CardContent>
             <CardFooter className="flex-col items-start gap-2 border-t-0 bg-transparent">
               {llmConfig ? (

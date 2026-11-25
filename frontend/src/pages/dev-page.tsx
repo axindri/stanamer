@@ -103,7 +103,7 @@ const GENERATE_FIELDS = [
     name: "description",
     type: "string",
     required: true,
-    description: "Описание сущности, 3–2000 символов",
+    description: "Описание сущности, 5–2000 символов",
   },
   {
     name: "style",

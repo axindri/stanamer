@@ -83,7 +83,7 @@ DEFAULT_SUGGESTION_COUNT = 5
 
 class NamingRequest(BaseModel):
     entity_type: EntityType
-    description: str = Field(..., min_length=3, max_length=2000)
+    description: str = Field(..., min_length=5, max_length=2000)
     context: str | None = Field(default=None, max_length=8000)
     context_url: str | None = Field(
         default=None,

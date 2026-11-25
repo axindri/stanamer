@@ -24,6 +24,8 @@ import {
   isNamingStyle,
 } from "@/lib/style"
 
+export const MIN_DESCRIPTION_LENGTH = 5
+
 type NamingPromptFieldProps = {
   description: string
   onDescriptionChange: (value: string) => void
@@ -54,8 +56,6 @@ export function NamingPromptField({
     namingStyles.find((item) => item.value === DEFAULT_NAMING_STYLE) ??
     namingStyles[0]
 
-  const canSend = description.trim().length > 0 && !loading
-
   return (
     <Field>
       <FieldLabel htmlFor="description" className="sr-only">
@@ -69,11 +69,11 @@ export function NamingPromptField({
           placeholder="Например: справочник клиентов из CRM с историей изменений"
           rows={4}
           required
-          disabled={loading}
+          minLength={MIN_DESCRIPTION_LENGTH}
           onKeyDown={(event) => {
             if (event.key === "Enter" && !event.shiftKey) {
               event.preventDefault()
-              if (canSend) {
+              if (!loading) {
                 event.currentTarget.form?.requestSubmit()
               }
             }
@@ -86,9 +86,8 @@ export function NamingPromptField({
               <InputGroupButton
                 size="sm"
                 variant="outline"
-                aria-label={`Тип сущности: ${currentEntity?.label ?? ""}`}
+                aria-label={`Тип сущности: ${currentEntity?.label ?? "Тип"}`}
                 className="ml-auto rounded-full"
-                disabled={loading || entityTypes.length === 0}
               >
                 {currentEntity ? (
                   <EntityTypeIcon type={currentEntity.value} />
@@ -120,9 +119,8 @@ export function NamingPromptField({
               <InputGroupButton
                 size="sm"
                 variant="outline"
-                aria-label={`Стиль имени: ${currentStyle?.label ?? ""}`}
+                aria-label={`Стиль имени: ${currentStyle?.label ?? "Стиль"}`}
                 className="rounded-full"
-                disabled={loading || namingStyles.length === 0}
               >
                 <span className="text-muted-foreground">Стиль</span>
                 {currentStyle?.label ?? "—"}
@@ -155,7 +153,6 @@ export function NamingPromptField({
             size="icon-sm"
             variant="default"
             className="rounded-full"
-            disabled={!canSend}
             aria-label="Сгенерировать"
           >
             {loading ? (
