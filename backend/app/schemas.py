@@ -111,8 +111,13 @@ class NamingRequest(BaseModel):
     )
     name_prefix: str | None = Field(
         default=None,
-        max_length=40,
+        max_length=8,
         description="Optional fixed prefix for all suggestions (e.g. stg_)",
+    )
+    name_postfix: str | None = Field(
+        default=None,
+        max_length=8,
+        description="Optional fixed postfix for all suggestions (e.g. _v1)",
     )
 
 

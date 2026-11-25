@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Slider } from "@/components/ui/slider"
 
 export const DEFAULT_SUGGESTION_COUNT = 5
 export const MIN_SUGGESTION_COUNT = 3
@@ -45,6 +46,19 @@ export function SuggestionCountField({
           </SelectGroup>
         </SelectContent>
       </Select>
+      <Slider
+        min={MIN_SUGGESTION_COUNT}
+        max={MAX_SUGGESTION_COUNT}
+        step={1}
+        value={[value]}
+        onValueChange={(next) => {
+          const selected = next[0]
+          if (typeof selected === "number") {
+            onValueChange(selected)
+          }
+        }}
+        aria-label="Количество вариантов"
+      />
       <FieldDescription>
         От {MIN_SUGGESTION_COUNT} до {MAX_SUGGESTION_COUNT}, по умолчанию{" "}
         {DEFAULT_SUGGESTION_COUNT}.

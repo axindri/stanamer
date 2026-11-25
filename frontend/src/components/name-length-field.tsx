@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { Slider } from "@/components/ui/slider"
 import {
   DEFAULT_MAX_NAME_LENGTH,
   MAX_MAX_NAME_LENGTH,
@@ -59,6 +60,21 @@ export function NameLengthField({
         value={draft}
         onChange={(event) => setDraft(event.target.value)}
         onBlur={commit}
+      />
+      <Slider
+        min={MIN_MAX_NAME_LENGTH}
+        max={MAX_MAX_NAME_LENGTH}
+        step={1}
+        value={[value]}
+        onValueChange={(next) => {
+          const selected = next[0]
+          if (typeof selected === "number") {
+            const clamped = clampMaxNameLength(selected)
+            setDraft(String(clamped))
+            onValueChange(clamped)
+          }
+        }}
+        aria-label="Максимальная длина имени"
       />
       <FieldDescription>
         По умолчанию {DEFAULT_MAX_NAME_LENGTH} символов (от{" "}

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react"
+import { Link } from "react-router-dom"
 import { toast } from "sonner"
 
 import { type ContextMode } from "@/components/context-field"
@@ -7,7 +8,6 @@ import { NamingPromptField } from "@/components/naming-prompt-field"
 import { NamingStyleField } from "@/components/naming-style-field"
 import { OptionalNamingParams } from "@/components/optional-naming-params"
 import { SuggestionList } from "@/components/suggestion-list"
-import { DEFAULT_SUGGESTION_COUNT } from "@/components/suggestion-count-field"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { FieldGroup } from "@/components/ui/field"
@@ -30,7 +30,13 @@ import {
   pushHistoryEntry,
   updateHistoryEntryStyle,
 } from "@/lib/history"
-import { DEFAULT_MAX_NAME_LENGTH } from "@/lib/name-length"
+import {
+  DEFAULT_OPTIONAL_PARAMS,
+  clearOptionalParams,
+  isOptionalParamsModified,
+  loadOptionalParams,
+  saveOptionalParams,
+} from "@/lib/optional-params"
 import {
   DEFAULT_NAMING_STYLE,
   type NamingStyle,
@@ -51,16 +57,32 @@ export function NamingPage() {
   const [namingStyle, setNamingStyle] =
     useState<NamingStyle>(DEFAULT_NAMING_STYLE)
   const [suggestionCount, setSuggestionCount] = useState(
-    DEFAULT_SUGGESTION_COUNT
+    DEFAULT_OPTIONAL_PARAMS.suggestionCount
   )
-  const [maxNameLength, setMaxNameLength] = useState(DEFAULT_MAX_NAME_LENGTH)
-  const [preferShort, setPreferShort] = useState(false)
-  const [allowDigits, setAllowDigits] = useState(true)
-  const [namePrefix, setNamePrefix] = useState("")
+  const [maxNameLength, setMaxNameLength] = useState(
+    DEFAULT_OPTIONAL_PARAMS.maxNameLength
+  )
+  const [preferShort, setPreferShort] = useState(
+    DEFAULT_OPTIONAL_PARAMS.preferShort
+  )
+  const [allowDigits, setAllowDigits] = useState(
+    DEFAULT_OPTIONAL_PARAMS.allowDigits
+  )
+  const [namePrefix, setNamePrefix] = useState(
+    DEFAULT_OPTIONAL_PARAMS.namePrefix
+  )
+  const [namePostfix, setNamePostfix] = useState(
+    DEFAULT_OPTIONAL_PARAMS.namePostfix
+  )
   const [description, setDescription] = useState("")
-  const [contextMode, setContextMode] = useState<ContextMode>("manual")
-  const [context, setContext] = useState("")
-  const [contextUrl, setContextUrl] = useState("")
+  const [contextMode, setContextMode] = useState<ContextMode>(
+    DEFAULT_OPTIONAL_PARAMS.contextMode
+  )
+  const [context, setContext] = useState(DEFAULT_OPTIONAL_PARAMS.context)
+  const [contextUrl, setContextUrl] = useState(
+    DEFAULT_OPTIONAL_PARAMS.contextUrl
+  )
+  const [optionalParamsHydrated, setOptionalParamsHydrated] = useState(false)
 
   const [loading, setLoading] = useState(false)
   const [suggestions, setSuggestions] = useState<NameSuggestion[] | null>(null)
@@ -71,10 +93,61 @@ export function NamingPage() {
   const [tab, setTab] = useState<AppTab>("generate")
   const resultsRef = useRef<HTMLElement>(null)
 
+  const optionalParamsModified = isOptionalParamsModified({
+    suggestionCount,
+    maxNameLength,
+    preferShort,
+    allowDigits,
+    namePrefix,
+    namePostfix,
+    contextMode,
+    context,
+    contextUrl,
+  })
+
   useEffect(() => {
     setHistory(loadHistory())
+    const saved = loadOptionalParams()
+    setSuggestionCount(saved.suggestionCount)
+    setMaxNameLength(saved.maxNameLength)
+    setPreferShort(saved.preferShort)
+    setAllowDigits(saved.allowDigits)
+    setNamePrefix(saved.namePrefix)
+    setNamePostfix(saved.namePostfix)
+    setContextMode(saved.contextMode)
+    setContext(saved.context)
+    setContextUrl(saved.contextUrl)
+    setOptionalParamsHydrated(true)
     setSuggestions(null)
   }, [])
+
+  useEffect(() => {
+    if (!optionalParamsHydrated) {
+      return
+    }
+    saveOptionalParams({
+      suggestionCount,
+      maxNameLength,
+      preferShort,
+      allowDigits,
+      namePrefix,
+      namePostfix,
+      contextMode,
+      context,
+      contextUrl,
+    })
+  }, [
+    optionalParamsHydrated,
+    suggestionCount,
+    maxNameLength,
+    preferShort,
+    allowDigits,
+    namePrefix,
+    namePostfix,
+    contextMode,
+    context,
+    contextUrl,
+  ])
 
   useEffect(() => {
     if (scrollToken === 0 || tab !== "generate") {
@@ -163,6 +236,20 @@ export function NamingPage() {
     toast.success("История очищена")
   }
 
+  function handleResetOptionalParams() {
+    clearOptionalParams()
+    setSuggestionCount(DEFAULT_OPTIONAL_PARAMS.suggestionCount)
+    setMaxNameLength(DEFAULT_OPTIONAL_PARAMS.maxNameLength)
+    setPreferShort(DEFAULT_OPTIONAL_PARAMS.preferShort)
+    setAllowDigits(DEFAULT_OPTIONAL_PARAMS.allowDigits)
+    setNamePrefix(DEFAULT_OPTIONAL_PARAMS.namePrefix)
+    setNamePostfix(DEFAULT_OPTIONAL_PARAMS.namePostfix)
+    setContextMode(DEFAULT_OPTIONAL_PARAMS.contextMode)
+    setContext(DEFAULT_OPTIONAL_PARAMS.context)
+    setContextUrl(DEFAULT_OPTIONAL_PARAMS.contextUrl)
+    toast.success("Дополнительные параметры сброшены")
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const trimmed = description.trim()
@@ -191,6 +278,7 @@ export function NamingPage() {
         prefer_short: preferShort,
         allow_digits: allowDigits,
         name_prefix: namePrefix.trim() || null,
+        name_postfix: namePostfix.trim() || null,
       })
       const nextHistory = pushHistoryEntry(history, {
         entityType,
@@ -264,12 +352,16 @@ export function NamingPage() {
                       onAllowDigitsChange={setAllowDigits}
                       namePrefix={namePrefix}
                       onNamePrefixChange={setNamePrefix}
+                      namePostfix={namePostfix}
+                      onNamePostfixChange={setNamePostfix}
                       contextMode={contextMode}
                       onContextModeChange={setContextMode}
                       context={context}
                       onContextChange={setContext}
                       contextUrl={contextUrl}
                       onContextUrlChange={setContextUrl}
+                      modified={optionalParamsModified}
+                      onReset={handleResetOptionalParams}
                     />
 
                     <NamingPromptField
@@ -287,8 +379,8 @@ export function NamingPage() {
                 </form>
               ) : null}
             </CardContent>
-            {llmConfig ? (
-              <CardFooter className="border-t-0 bg-transparent">
+            <CardFooter className="flex-col items-start gap-2 border-t-0 bg-transparent">
+              {llmConfig ? (
                 <p className="text-xs text-muted-foreground">
                   Используются технологии{" "}
                   <span className="font-mono text-primary">
@@ -299,8 +391,17 @@ export function NamingPage() {
                     {llmConfig.model}
                   </span>
                 </p>
-              </CardFooter>
-            ) : null}
+              ) : null}
+              <p className="text-xs text-muted-foreground">
+                Используя сервис, вы обязуетесь соблюдать{" "}
+                <Link
+                  to="/terms"
+                  className="underline underline-offset-4 hover:text-foreground"
+                >
+                  пользовательское соглашение.
+                </Link>
+              </p>
+            </CardFooter>
           </Card>
 
           {suggestions ? (

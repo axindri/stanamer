@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils"
 const NAV_ITEMS = [
   { to: "/naming", label: "Нейминг" },
   { to: "/dev", label: "Development" },
+  { to: "/terms", label: "Соглашение" },
 ] as const
 
 function blurNavTarget(event: React.MouseEvent<HTMLAnchorElement>) {

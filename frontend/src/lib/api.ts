@@ -38,6 +38,7 @@ export type NamingRequestPayload = {
   prefer_short?: boolean
   allow_digits?: boolean
   name_prefix?: string | null
+  name_postfix?: string | null
 }
 
 async function readError(response: Response): Promise<string> {

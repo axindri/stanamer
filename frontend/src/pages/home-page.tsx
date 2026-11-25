@@ -40,6 +40,13 @@ export function HomePage() {
             >
               Development
             </Link>
+            . Используя сервис, вы принимаете{" "}
+            <Link
+              to="/terms"
+              className="underline underline-offset-4 hover:text-foreground"
+            >
+              пользовательское соглашение
+            </Link>
             .
           </p>
         </div>

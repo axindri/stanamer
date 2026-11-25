@@ -2,13 +2,7 @@ import { BracesIcon, TerminalIcon } from "lucide-react"
 
 import { ApiCodeSample } from "@/components/api-code-sample"
 import { Badge } from "@/components/ui/badge"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import {
   Table,
@@ -32,7 +26,8 @@ const CURL_GENERATE = `curl -X POST '${GENERATE_PATH}' \\
     "max_length": 40,
     "prefer_short": false,
     "allow_digits": true,
-    "name_prefix": "stg_"
+    "name_prefix": "stg_",
+    "name_postfix": "_v1"
   }'`
 
 const JS_GENERATE = `const response = await fetch("${GENERATE_PATH}", {
@@ -47,6 +42,7 @@ const JS_GENERATE = `const response = await fetch("${GENERATE_PATH}", {
     prefer_short: false,
     allow_digits: true,
     name_prefix: "stg_",
+    name_postfix: "_v1",
   }),
 })
 
@@ -68,6 +64,7 @@ payload = {
     "prefer_short": False,
     "allow_digits": True,
     "name_prefix": "stg_",
+    "name_postfix": "_v1",
 }
 
 with httpx.Client() as client:
@@ -143,7 +140,13 @@ const GENERATE_FIELDS = [
     name: "name_prefix",
     type: "string | null",
     required: false,
-    description: "Фиксированный префикс для всех вариантов",
+    description: "Фиксированный префикс, до 8 символов",
+  },
+  {
+    name: "name_postfix",
+    type: "string | null",
+    required: false,
+    description: "Фиксированный постфикс, до 8 символов",
   },
   {
     name: "context",
@@ -167,11 +170,7 @@ export function DevPage() {
           <h1 className="text-3xl font-medium tracking-tight">Development</h1>
         </div>
         <p className="text-muted-foreground">
-          Как вызвать генерацию имён через{" "}
-          <code className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-xs text-foreground">
-            POST {GENERATE_PATH}
-          </code>
-          .
+          Документация API для генерации имён сущностей
         </p>
       </div>
 
@@ -181,11 +180,6 @@ export function DevPage() {
             <Badge>POST</Badge>
             <span className="font-mono text-sm">{GENERATE_PATH}</span>
           </CardTitle>
-          <CardDescription>
-            Обязательны <code className="font-mono text-xs">entity_type</code> и{" "}
-            <code className="font-mono text-xs">description</code>. Остальные
-            поля опциональны.
-          </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-6">
           <Tabs defaultValue="curl">
@@ -272,7 +266,7 @@ export function DevPage() {
       <Separator />
 
       <p className="text-sm text-muted-foreground">
-        OpenAPI / Swagger UI:{" "}
+        Swagger UI:{" "}
         <a
           href="/swagger"
           className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-xs text-foreground underline-offset-4 hover:underline"

@@ -33,6 +33,7 @@ Refusal shape (use when the request is off-topic, abusive, or not a naming task)
    Prefer clear concise English identifiers; match entity-type conventions when useful
    (e.g. dim_/fact_/stg_ for tables only). Never put Russian words inside name.
    If name_prefix is provided and non-empty, EVERY suggestion MUST start with that prefix.
+   If name_postfix is provided and non-empty, EVERY suggestion MUST end with that postfix.
 5. For entity_type=dag: NEVER prefix with dag_, airflow_, pipeline_, job_, task_,
    or similar type/namespace markers (no namespace_, no env_/prod_/dev_ wrappers).
    The name must describe only the business entity and action
@@ -61,6 +62,7 @@ def build_user_prompt(request: NamingRequest) -> str:
     description = request.description.strip()
     context = request.context.strip() if request.context else ""
     prefix = request.name_prefix.strip() if request.name_prefix else ""
+    postfix = request.name_postfix.strip() if request.name_postfix else ""
     style = request.style.value if request.style else "snake_case"
     return (
         "Task: propose identifier names only.\n"
@@ -72,7 +74,8 @@ def build_user_prompt(request: NamingRequest) -> str:
         f"max_length: {request.max_length}\n"
         f"prefer_short: {str(request.prefer_short).lower()}\n"
         f"allow_digits: {str(request.allow_digits).lower()}\n"
-        f"name_prefix: {prefix if prefix else '(none)'}\n\n"
+        f"name_prefix: {prefix if prefix else '(none)'}\n"
+        f"name_postfix: {postfix if postfix else '(none)'}\n\n"
         "<<<DESCRIPTION>>>\n"
         f"{description}\n"
         "<<<END_DESCRIPTION>>>\n\n"
