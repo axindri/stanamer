@@ -158,6 +158,7 @@ export function ContextField({
           onChange={(event) => onValueChange(event.target.value)}
           placeholder="Слой stg/ods/dds, домен, система, договорённости по неймингу"
           rows={3}
+          className="max-h-48 overflow-y-auto"
         />
       ) : null}
 

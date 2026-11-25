@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import type { NameSuggestion } from "@/lib/api"
+import { copyText } from "@/lib/copy-text"
 
 type SuggestionListProps = {
   suggestions: NameSuggestion[]
@@ -18,7 +19,7 @@ type SuggestionListProps = {
 
 async function handleCopy(name: string) {
   try {
-    await navigator.clipboard.writeText(name)
+    await copyText(name)
     toast.success("Скопировано", { description: name })
   } catch {
     toast.error("Не удалось скопировать")

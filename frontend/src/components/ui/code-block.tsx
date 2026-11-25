@@ -4,6 +4,7 @@ import { cn } from "cn"
 import { CheckIcon, CopyIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { copyText } from "@/lib/copy-text"
 
 const codeBlockVariants = cva(
   "group/code-block relative flex w-full min-w-0 flex-col overflow-hidden rounded-lg text-sm has-[>[data-slot=code-block-content]:focus-visible]:ring-3 has-[>[data-slot=code-block-content]:focus-visible]:ring-ring/50 data-[size=sm]:text-xs",
@@ -110,8 +111,7 @@ function CodeBlockCopyButton({
       className={cn(className)}
       onClick={(event) => {
         onClick?.(event)
-        void navigator.clipboard
-          .writeText(value)
+        void copyText(value)
           .then(() => setCopied(true))
           .catch(() => {})
       }}
