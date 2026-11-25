@@ -1,6 +1,14 @@
-export const DEFAULT_MAX_NAME_LENGTH = 40
-export const MIN_MAX_NAME_LENGTH = 8
-export const MAX_MAX_NAME_LENGTH = 80
+import {
+  DEFAULT_MAX_NAME_LENGTH,
+  MAX_MAX_NAME_LENGTH,
+  MIN_MAX_NAME_LENGTH,
+} from "@/lib/constants"
+
+export {
+  DEFAULT_MAX_NAME_LENGTH,
+  MAX_MAX_NAME_LENGTH,
+  MIN_MAX_NAME_LENGTH,
+} from "@/lib/constants"
 
 export function clampMaxNameLength(value: number): number {
   if (!Number.isFinite(value)) {

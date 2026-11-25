@@ -1,20 +1,14 @@
-export type NamingStyle =
-  | "snake_case"
-  | "camelCase"
-  | "PascalCase"
-  | "kebab-case"
+import { DEFAULT_NAMING_STYLE, NAMING_STYLES } from "@/lib/constants"
 
-export const DEFAULT_NAMING_STYLE: NamingStyle = "snake_case"
+export type NamingStyle = (typeof NAMING_STYLES)[number]
 
-const KNOWN_STYLES: NamingStyle[] = [
-  "snake_case",
-  "camelCase",
-  "PascalCase",
-  "kebab-case",
-]
+export { DEFAULT_NAMING_STYLE }
 
 export function isNamingStyle(value: unknown): value is NamingStyle {
-  return typeof value === "string" && KNOWN_STYLES.includes(value as NamingStyle)
+  return (
+    typeof value === "string" &&
+    (NAMING_STYLES as readonly string[]).includes(value)
+  )
 }
 
 const CAMEL_BOUNDARY =

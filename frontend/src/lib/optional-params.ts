@@ -1,16 +1,22 @@
 import type { ContextMode } from "@/components/context-field"
 import {
+  DEFAULT_ALLOW_DIGITS,
+  DEFAULT_CONTEXT,
+  DEFAULT_CONTEXT_MODE,
+  DEFAULT_CONTEXT_URL,
+  DEFAULT_MAX_NAME_LENGTH,
+  DEFAULT_NAME_POSTFIX,
+  DEFAULT_NAME_PREFIX,
+  DEFAULT_PREFER_SHORT,
   DEFAULT_SUGGESTION_COUNT,
+  MAX_NAME_AFFIX_LENGTH,
   MAX_SUGGESTION_COUNT,
   MIN_SUGGESTION_COUNT,
-} from "@/components/suggestion-count-field"
-import {
-  clampMaxNameLength,
-  DEFAULT_MAX_NAME_LENGTH,
-} from "@/lib/name-length"
+  OPTIONAL_PARAMS_STORAGE_KEY,
+} from "@/lib/constants"
+import { clampMaxNameLength } from "@/lib/name-length"
 
-export const OPTIONAL_PARAMS_STORAGE_KEY = "stanamer.optional-params"
-export const MAX_NAME_AFFIX_LENGTH = 8
+export { MAX_NAME_AFFIX_LENGTH, OPTIONAL_PARAMS_STORAGE_KEY }
 
 export type OptionalNamingParamsState = {
   suggestionCount: number
@@ -27,13 +33,13 @@ export type OptionalNamingParamsState = {
 export const DEFAULT_OPTIONAL_PARAMS: OptionalNamingParamsState = {
   suggestionCount: DEFAULT_SUGGESTION_COUNT,
   maxNameLength: DEFAULT_MAX_NAME_LENGTH,
-  preferShort: false,
-  allowDigits: true,
-  namePrefix: "",
-  namePostfix: "",
-  contextMode: "manual",
-  context: "",
-  contextUrl: "",
+  preferShort: DEFAULT_PREFER_SHORT,
+  allowDigits: DEFAULT_ALLOW_DIGITS,
+  namePrefix: DEFAULT_NAME_PREFIX,
+  namePostfix: DEFAULT_NAME_POSTFIX,
+  contextMode: DEFAULT_CONTEXT_MODE,
+  context: DEFAULT_CONTEXT,
+  contextUrl: DEFAULT_CONTEXT_URL,
 }
 
 function isContextMode(value: unknown): value is ContextMode {

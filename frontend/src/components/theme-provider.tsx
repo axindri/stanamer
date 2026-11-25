@@ -1,6 +1,12 @@
 import * as React from "react"
 
-type Theme = "dark" | "light" | "system"
+import {
+  COLOR_SCHEME_QUERY,
+  THEME_STORAGE_KEY,
+  THEME_VALUES,
+} from "@/lib/constants"
+
+type Theme = (typeof THEME_VALUES)[number]
 type ResolvedTheme = "dark" | "light"
 
 type ThemeProviderProps = {
@@ -14,9 +20,6 @@ type ThemeProviderState = {
   theme: Theme
   setTheme: (theme: Theme) => void
 }
-
-const COLOR_SCHEME_QUERY = "(prefers-color-scheme: dark)"
-const THEME_VALUES: Theme[] = ["dark", "light", "system"]
 
 const ThemeProviderContext = React.createContext<
   ThemeProviderState | undefined
@@ -79,7 +82,7 @@ function isEditableTarget(target: EventTarget | null) {
 export function ThemeProvider({
   children,
   defaultTheme = "system",
-  storageKey = "theme",
+  storageKey = THEME_STORAGE_KEY,
   disableTransitionOnChange = true,
   ...props
 }: ThemeProviderProps) {

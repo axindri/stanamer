@@ -9,17 +9,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { THEME_OPTIONS } from "@/lib/constants"
 
-const THEME_OPTIONS = [
-  { value: "system" as const, label: "Системная", icon: MonitorIcon },
-  { value: "light" as const, label: "Светлая", icon: SunIcon },
-  { value: "dark" as const, label: "Тёмная", icon: MoonIcon },
-]
+const THEME_ICONS = {
+  system: MonitorIcon,
+  light: SunIcon,
+  dark: MoonIcon,
+} as const
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme()
-  const ActiveIcon =
-    THEME_OPTIONS.find((option) => option.value === theme)?.icon ?? MonitorIcon
+  const ActiveIcon = THEME_ICONS[theme] ?? MonitorIcon
 
   return (
     <DropdownMenu>
@@ -36,7 +36,7 @@ export function ThemeToggle() {
       <DropdownMenuContent align="end">
         <DropdownMenuGroup>
           {THEME_OPTIONS.map((option) => {
-            const Icon = option.icon
+            const Icon = THEME_ICONS[option.value]
             return (
               <DropdownMenuItem
                 key={option.value}

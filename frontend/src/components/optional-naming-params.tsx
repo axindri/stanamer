@@ -14,7 +14,7 @@ import { Field, FieldDescription, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
-import { MAX_NAME_AFFIX_LENGTH } from "@/lib/optional-params"
+import { MAX_NAME_AFFIX_LENGTH } from "@/lib/constants"
 
 type OptionalNamingParamsProps = {
   suggestionCount: number

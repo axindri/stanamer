@@ -1,12 +1,12 @@
 import type { NameSuggestion } from "@/lib/api"
+import { HISTORY_LIMIT, HISTORY_STORAGE_KEY } from "@/lib/constants"
 import {
   type NamingStyle,
   applyNamingStyle,
   isNamingStyle,
 } from "@/lib/style"
 
-export const HISTORY_STORAGE_KEY = "stanamer.naming-history"
-export const HISTORY_LIMIT = 10
+export { HISTORY_LIMIT, HISTORY_STORAGE_KEY }
 
 export type NamingHistoryEntry = {
   id: string

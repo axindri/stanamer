@@ -1,3 +1,10 @@
+import {
+  API_ENTITY_TYPES_PATH,
+  API_GENERATE_PATH,
+  API_LLM_CONFIG_PATH,
+  API_NAMING_STYLES_PATH,
+} from "@/lib/constants"
+
 export type MetaItem = {
   value: string
   label: string
@@ -63,7 +70,7 @@ async function readError(response: Response): Promise<string> {
 }
 
 export async function fetchEntityTypes(): Promise<EntityTypeMetaItem[]> {
-  const response = await fetch("/api/v1/meta/entity-types")
+  const response = await fetch(API_ENTITY_TYPES_PATH)
   if (!response.ok) {
     throw new Error(await readError(response))
   }
@@ -71,7 +78,7 @@ export async function fetchEntityTypes(): Promise<EntityTypeMetaItem[]> {
 }
 
 export async function fetchNamingStyles(): Promise<NamingStyleMetaItem[]> {
-  const response = await fetch("/api/v1/meta/naming-styles")
+  const response = await fetch(API_NAMING_STYLES_PATH)
   if (!response.ok) {
     throw new Error(await readError(response))
   }
@@ -79,7 +86,7 @@ export async function fetchNamingStyles(): Promise<NamingStyleMetaItem[]> {
 }
 
 export async function fetchLlmConfig(): Promise<LlmConfigMeta> {
-  const response = await fetch("/api/v1/meta/llm")
+  const response = await fetch(API_LLM_CONFIG_PATH)
   if (!response.ok) {
     throw new Error(await readError(response))
   }
@@ -89,7 +96,7 @@ export async function fetchLlmConfig(): Promise<LlmConfigMeta> {
 export async function generateNames(
   payload: NamingRequestPayload
 ): Promise<NamingResponse> {
-  const response = await fetch("/api/v1/naming/generate", {
+  const response = await fetch(API_GENERATE_PATH, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),

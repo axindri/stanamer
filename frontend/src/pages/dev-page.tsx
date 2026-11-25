@@ -13,8 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
-const GENERATE_PATH = "/api/v1/naming/generate"
+import { API_GENERATE_PATH as GENERATE_PATH } from "@/lib/constants"
 
 const CURL_GENERATE = `curl -X POST '${GENERATE_PATH}' \\
   -H 'Content-Type: application/json' \\
@@ -103,7 +102,7 @@ const GENERATE_FIELDS = [
     name: "description",
     type: "string",
     required: true,
-    description: "Описание сущности, 5–2000 символов",
+    description: "Описание сущности, 3–2000 символов",
   },
   {
     name: "style",
@@ -167,7 +166,7 @@ export function DevPage() {
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-6 py-12">
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-3">
-          <h1 className="text-3xl font-medium tracking-tight">Development</h1>
+          <h1 className="text-3xl font-medium tracking-tight">Разработка</h1>
         </div>
         <p className="text-muted-foreground">
           Документация API для генерации имён сущностей

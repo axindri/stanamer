@@ -8,12 +8,18 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
+import {
+  DEFAULT_SUGGESTION_COUNT,
+  MAX_SUGGESTION_COUNT,
+  MIN_SUGGESTION_COUNT,
+  SUGGESTION_COUNT_OPTIONS,
+} from "@/lib/constants"
 
-export const DEFAULT_SUGGESTION_COUNT = 5
-export const MIN_SUGGESTION_COUNT = 3
-export const MAX_SUGGESTION_COUNT = 7
-
-const COUNT_OPTIONS = [3, 4, 5, 6, 7] as const
+export {
+  DEFAULT_SUGGESTION_COUNT,
+  MAX_SUGGESTION_COUNT,
+  MIN_SUGGESTION_COUNT,
+} from "@/lib/constants"
 
 type SuggestionCountFieldProps = {
   id?: string
@@ -38,7 +44,7 @@ export function SuggestionCountField({
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            {COUNT_OPTIONS.map((count) => (
+            {SUGGESTION_COUNT_OPTIONS.map((count) => (
               <SelectItem key={count} value={String(count)}>
                 {count}
               </SelectItem>

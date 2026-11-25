@@ -8,13 +8,8 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
+import { NAV_ITEMS } from "@/lib/constants"
 import { cn } from "@/lib/utils"
-
-const NAV_ITEMS = [
-  { to: "/naming", label: "Нейминг" },
-  { to: "/dev", label: "Development" },
-  { to: "/terms", label: "Соглашение" },
-] as const
 
 function blurNavTarget(event: React.MouseEvent<HTMLAnchorElement>) {
   event.currentTarget.blur()

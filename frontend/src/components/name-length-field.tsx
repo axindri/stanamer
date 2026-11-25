@@ -7,8 +7,8 @@ import {
   DEFAULT_MAX_NAME_LENGTH,
   MAX_MAX_NAME_LENGTH,
   MIN_MAX_NAME_LENGTH,
-  clampMaxNameLength,
-} from "@/lib/name-length"
+} from "@/lib/constants"
+import { clampMaxNameLength } from "@/lib/name-length"
 
 type NameLengthFieldProps = {
   id?: string

@@ -17,6 +17,7 @@ import {
   InputGroupTextarea,
 } from "@/components/ui/input-group"
 import type { EntityTypeMetaItem, NamingStyleMetaItem } from "@/lib/api"
+import { MIN_DESCRIPTION_LENGTH } from "@/lib/constants"
 import { EntityTypeIcon } from "@/lib/entity-meta"
 import {
   DEFAULT_NAMING_STYLE,
@@ -24,7 +25,7 @@ import {
   isNamingStyle,
 } from "@/lib/style"
 
-export const MIN_DESCRIPTION_LENGTH = 5
+export { MIN_DESCRIPTION_LENGTH }
 
 type NamingPromptFieldProps = {
   description: string

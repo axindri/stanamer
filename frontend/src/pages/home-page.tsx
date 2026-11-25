@@ -38,7 +38,7 @@ export function HomePage() {
               to="/dev"
               className="underline underline-offset-4 hover:text-foreground"
             >
-              Development
+              Разработка
             </Link>
             . Используя сервис, вы принимаете{" "}
             <Link

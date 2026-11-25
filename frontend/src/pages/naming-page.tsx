@@ -4,10 +4,7 @@ import { toast } from "sonner"
 
 import { type ContextMode } from "@/components/context-field"
 import { HistoryList } from "@/components/history-list"
-import {
-  MIN_DESCRIPTION_LENGTH,
-  NamingPromptField,
-} from "@/components/naming-prompt-field"
+import { NamingPromptField } from "@/components/naming-prompt-field"
 import { NamingStyleField } from "@/components/naming-style-field"
 import { OptionalNamingParams } from "@/components/optional-naming-params"
 import { SuggestionList } from "@/components/suggestion-list"
@@ -33,6 +30,10 @@ import {
   updateHistoryEntryStyle,
 } from "@/lib/history"
 import {
+  DEFAULT_NAMING_STYLE,
+  MIN_DESCRIPTION_LENGTH,
+} from "@/lib/constants"
+import {
   DEFAULT_OPTIONAL_PARAMS,
   clearOptionalParams,
   isOptionalParamsModified,
@@ -40,7 +41,6 @@ import {
   saveOptionalParams,
 } from "@/lib/optional-params"
 import {
-  DEFAULT_NAMING_STYLE,
   type NamingStyle,
   applyNamingStyle,
   isNamingStyle,
